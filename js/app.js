@@ -68,26 +68,30 @@ function endVotingSession() {
   thirdCandidateImage.removeEventListener('click', thirdCandidateVote);
 
   viewResultsButton.addEventListener('click', renderResults);
+  viewResultsButton.removeAttribute('disabled');
 }
 
 // render results from voting session
 function renderResults () {
-  
+
 }
 
 // functions to handle votes for product candidates
 function firstCandidateVote() {
   firstCandidateInstance.votes++;
+  roundCounter++;
   renderProductCandidates();
 }
 
 function secondCandidateVote() {
   secondCandidateInstance.votes++;
+  roundCounter++;
   renderProductCandidates();
 }
 
 function thirdCandidateVote() {
   thirdCandidateInstance.votes++;
+  roundCounter++;
   renderProductCandidates();
 }
 
