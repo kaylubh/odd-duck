@@ -45,15 +45,27 @@ function renderProductCandidates() {
     endVotingSession();
   }
 
+  if (randomizedProductObjects.length === 0) {
+    shuffleProductObjects();
+  }
+
   firstCandidateInstance = randomizedProductObjects.pop();
   firstCandidateImage.setAttribute('src', firstCandidateInstance.imgSrc);
   firstCandidateImage.setAttribute('alt', firstCandidateInstance.productName);
   firstCandidateInstance.views++;
 
+  if (randomizedProductObjects.length === 0) {
+    shuffleProductObjects();
+  }
+
   secondCandidateInstance = randomizedProductObjects.pop();
   secondCandidateImage.setAttribute('src', secondCandidateInstance.imgSrc);
   secondCandidateImage.setAttribute('alt', secondCandidateInstance.productName);
   secondCandidateInstance.views++;
+
+  if (randomizedProductObjects.length === 0) {
+    shuffleProductObjects();
+  }
 
   thirdCandidateInstance = randomizedProductObjects.pop();
   thirdCandidateImage.setAttribute('src', thirdCandidateInstance.imgSrc);
@@ -72,7 +84,7 @@ function endVotingSession() {
 }
 
 // render results from voting session
-function renderResults () {
+function renderResults() {
 
 }
 
