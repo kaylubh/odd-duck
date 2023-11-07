@@ -1,0 +1,59 @@
+/* body */
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* header */
+
+header {
+  width: 100%;
+  height: 20%;
+}
+
+/* main */
+
+main {
+  display: flex;
+  width: 100%;
+  height: 80%;
+}
+
+/* results aside */
+
+aside {
+  background-color: black;
+  color: whitesmoke;
+  width: 20%;
+}
+
+/* voting area container */
+
+#votingArea {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+}
+
+/* product images */
+
+#productImages {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+#productImages img {
+  width: 30%;
+  height: 100%;
+  border: 5px solid darkgray;
+  background-color: whitesmoke;
+  object-fit: contain;
+}
+
+/* footer */
+
+footer {
+  width: 100%;
+  height: 20%;
+}
