@@ -104,6 +104,13 @@ function renderResults() {
   }
 }
 
+// add event listeners for votes (clicks) on displayed products
+function initVoteEventListeners() {
+  firstCandidateImage.addEventListener('click', firstCandidateVote);
+  secondCandidateImage.addEventListener('click', secondCandidateVote);
+  thirdCandidateImage.addEventListener('click', thirdCandidateVote);
+}
+
 // functions to handle votes for product candidates
 function firstCandidateVote() {
   firstCandidateInstance.votes++;
@@ -123,12 +130,13 @@ function thirdCandidateVote() {
   renderProductCandidates();
 }
 
-// run application
-initProductObjects();
-fixSweep();
-renderProductCandidates();
+// calls all functions to start the app
+function startApp() {
+  initProductObjects();
+  fixSweep();
+  renderProductCandidates();
+  initVoteEventListeners();
+}
 
-// event listeners for clicks (votes)
-firstCandidateImage.addEventListener('click', firstCandidateVote);
-secondCandidateImage.addEventListener('click', secondCandidateVote);
-thirdCandidateImage.addEventListener('click', thirdCandidateVote);
+// run application
+startApp();
