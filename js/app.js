@@ -9,6 +9,9 @@ let secondCandidateInstance;
 const secondCandidateImage = document.querySelector('#productImages img:nth-child(2)');
 let thirdCandidateInstance;
 const thirdCandidateImage = document.querySelector('#productImages img:last-child');
+const viewResultsButton = document.querySelector('#viewResults');
+let roundCounter = 0;
+const maxRounds = 5;
 
 
 // product constructor function
@@ -38,6 +41,10 @@ function shuffleProductObjects() {
 
 // render products to be voted on
 function renderProductCandidates() {
+  if (roundCounter === maxRounds) {
+    endVotingSession();
+  }
+
   firstCandidateInstance = randomizedProductObjects.pop();
   firstCandidateImage.setAttribute('src', firstCandidateInstance.imgSrc);
   firstCandidateImage.setAttribute('alt', firstCandidateInstance.productName);
@@ -52,6 +59,20 @@ function renderProductCandidates() {
   thirdCandidateImage.setAttribute('src', thirdCandidateInstance.imgSrc);
   thirdCandidateImage.setAttribute('alt', thirdCandidateInstance.productName);
   thirdCandidateInstance.views++;
+}
+
+// end voting sessions
+function endVotingSession() {
+  firstCandidateImage.removeEventListener('click', firstCandidateVote);
+  secondCandidateImage.removeEventListener('click', secondCandidateVote);
+  thirdCandidateImage.removeEventListener('click', thirdCandidateVote);
+
+  viewResultsButton.addEventListener('click', renderResults);
+}
+
+// render results from voting session
+function renderResults () {
+  
 }
 
 // functions to handle votes for product candidates
