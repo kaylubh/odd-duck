@@ -3,10 +3,15 @@
 const productNames = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'sweep', 'tauntaun', 'unicorn', 'water-can', 'wine-glass'];
 const productObjects = [];
 let randomizedProductObjects = [];
-const voteContainer = document.querySelector('#productImageContainer');
-const productCandidatesPerRound = 3;
+let firstCandidateInstance;
+const firstCandidateImage = document.querySelector('#productImages img:first-child');
+let secondCandidateInstance;
+const secondCandidateImage = document.querySelector('#productImages img:nth-child(2)');
+let thirdCandidateInstance;
+const thirdCandidateImage = document.querySelector('#productImages img:last-child');
 
-// Product constructor function
+
+// product constructor function
 function Product(productName) {
   this.productName = productName;
   this.imgSrc = `img/${productName}.jpg`;
@@ -14,7 +19,7 @@ function Product(productName) {
   this.votes = 0;
 }
 
-// create Product objects
+// create product objects
 function createProductObjects() {
   for (let i = 0; i < productNames.length; i++) {
     const currentProduct = new Product(productNames[i]);
@@ -31,15 +36,25 @@ function shuffleProductObjects() {
   }
 }
 
-// render image elements for Products to vote on
-function renderImgElements() {
-  for (let i = 0; i < productCandidatesPerRound; i++) {
-    const currentImgElement = document.createElement('img');
-    voteContainer.appendChild(currentImgElement);
-  }
+// render products to be voted on
+function renderProductCandidates () {
+  firstCandidateInstance = randomizedProductObjects.pop();
+  firstCandidateImage.setAttribute('src', firstCandidateInstance.imgSrc);
+  firstCandidateImage.setAttribute('alt', firstCandidateInstance.productName);
+  firstCandidateInstance.views++;
+
+  secondCandidateInstance = randomizedProductObjects.pop();
+  secondCandidateImage.setAttribute('src', secondCandidateInstance.imgSrc);
+  secondCandidateImage.setAttribute('alt', secondCandidateInstance.productName);
+  secondCandidateInstance.views++;
+
+  thirdCandidateInstance = randomizedProductObjects.pop();
+  thirdCandidateImage.setAttribute('src', thirdCandidateInstance.imgSrc);
+  thirdCandidateImage.setAttribute('alt', thirdCandidateInstance.productName);
+  thirdCandidateInstance.views++;
 }
 
 // run application
 createProductObjects();
 shuffleProductObjects();
-renderImgElements();
+renderProductCandidates();
