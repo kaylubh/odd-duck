@@ -4,10 +4,10 @@ const productNames = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubble
 const productObjects = [];
 let randomizedProductObjects = [];
 let firstCandidateInstance;
-const firstCandidateImage = document.querySelector('#productImages img:first-child');
 let secondCandidateInstance;
-const secondCandidateImage = document.querySelector('#productImages img:nth-child(2)');
 let thirdCandidateInstance;
+const firstCandidateImage = document.querySelector('#productImages img:first-child');
+const secondCandidateImage = document.querySelector('#productImages img:nth-child(2)');
 const thirdCandidateImage = document.querySelector('#productImages img:last-child');
 const viewResultsButton = document.querySelector('#viewResults');
 const resultsList = document.querySelector('#resultsList');
@@ -24,7 +24,7 @@ function Product(productName) {
 }
 
 // create product objects
-function createProductObjects() {
+function initProductObjects() {
   for (let i = 0; i < productNames.length; i++) {
     const currentProduct = new Product(productNames[i]);
     productObjects.push(currentProduct);
@@ -41,7 +41,7 @@ function fixSweep() {
   }
 }
 
-// randomize order of the productObjects array with the Fisher-Yates shuffle algorithm
+// randomize order of the productObjects array with the Fisher-Yates shuffle algorithm via ChatGPT
 function shuffleProductObjects() {
   randomizedProductObjects = productObjects.slice();
   for (let i = randomizedProductObjects.length - 1; i > 0; i--) {
@@ -124,9 +124,8 @@ function thirdCandidateVote() {
 }
 
 // run application
-createProductObjects();
+initProductObjects();
 fixSweep();
-shuffleProductObjects();
 renderProductCandidates();
 
 // event listeners for clicks (votes)
