@@ -12,7 +12,7 @@ const thirdCandidateImage = document.querySelector('#productImages img:last-chil
 const viewResultsButton = document.querySelector('#viewResults');
 const resultsList = document.querySelector('#resultsList');
 let roundCounter = 0;
-const maxRounds = 5;
+const maxRounds = 25;
 
 
 // product constructor function
