@@ -31,6 +31,16 @@ function createProductObjects() {
   }
 }
 
+// fix "sweep" product imgSrc file extension
+function fixSweep() {
+  for (let i = 0; i < productObjects.length; i++) {
+    const currentProduct = productObjects[i];
+    if (currentProduct.productName === 'sweep') {
+      currentProduct.imgSrc = 'img/sweep.png';
+    }
+  }
+}
+
 // randomize order of the productObjects array with the Fisher-Yates shuffle algorithm
 function shuffleProductObjects() {
   randomizedProductObjects = productObjects.slice();
@@ -115,6 +125,7 @@ function thirdCandidateVote() {
 
 // run application
 createProductObjects();
+fixSweep();
 shuffleProductObjects();
 renderProductCandidates();
 
