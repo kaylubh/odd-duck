@@ -37,7 +37,7 @@ function shuffleProductObjects() {
 }
 
 // render products to be voted on
-function renderProductCandidates () {
+function renderProductCandidates() {
   firstCandidateInstance = randomizedProductObjects.pop();
   firstCandidateImage.setAttribute('src', firstCandidateInstance.imgSrc);
   firstCandidateImage.setAttribute('alt', firstCandidateInstance.productName);
@@ -54,7 +54,28 @@ function renderProductCandidates () {
   thirdCandidateInstance.views++;
 }
 
+// functions to handle votes for product candidates
+function firstCandidateVote() {
+  firstCandidateInstance.votes++;
+  renderProductCandidates();
+}
+
+function secondCandidateVote() {
+  secondCandidateInstance.votes++;
+  renderProductCandidates();
+}
+
+function thirdCandidateVote() {
+  thirdCandidateInstance.votes++;
+  renderProductCandidates();
+}
+
 // run application
 createProductObjects();
 shuffleProductObjects();
 renderProductCandidates();
+
+// event listeners for clicks (votes)
+firstCandidateImage.addEventListener('click', firstCandidateVote);
+secondCandidateImage.addEventListener('click', secondCandidateVote);
+thirdCandidateImage.addEventListener('click', thirdCandidateVote);
