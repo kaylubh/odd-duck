@@ -22,8 +22,17 @@ function createProductObjects() {
   }
 }
 
-// render Product image elements
-function renderImgElements () {
+// randomize order of the productObjects array with the Fisher-Yates shuffle algorithm
+function shuffleProductObjects() {
+  randomizedProductObjects = productObjects.slice();
+  for (let i = randomizedProductObjects.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [randomizedProductObjects[i], randomizedProductObjects[j]] = [randomizedProductObjects[j], randomizedProductObjects[i]];
+  }
+}
+
+// render image elements for Products to vote on
+function renderImgElements() {
   for (let i = 0; i < productCandidatesPerRound; i++) {
     const currentImgElement = document.createElement('img');
     voteContainer.appendChild(currentImgElement);
@@ -32,4 +41,5 @@ function renderImgElements () {
 
 // run application
 createProductObjects();
+shuffleProductObjects();
 renderImgElements();
