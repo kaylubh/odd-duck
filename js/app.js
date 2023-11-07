@@ -1,13 +1,11 @@
 'use strict';
 
 const productNames = ['bag', 'banana', 'bathroom', 'boots', 'breakfast', 'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen', 'pet-sweep', 'scissors', 'shark', 'sweep', 'tauntaun', 'unicorn', 'water-can', 'wine-glass'];
-const productObjects = [];
-let randomizedProductObjects = [];
 let firstCandidateInstance;
-const firstCandidateImage = document.querySelector('#productImages img:first-child');
 let secondCandidateInstance;
-const secondCandidateImage = document.querySelector('#productImages img:nth-child(2)');
 let thirdCandidateInstance;
+const firstCandidateImage = document.querySelector('#productImages img:first-child');
+const secondCandidateImage = document.querySelector('#productImages img:nth-child(2)');
 const thirdCandidateImage = document.querySelector('#productImages img:last-child');
 const viewResultsButton = document.querySelector('#viewResults');
 const resultsList = document.querySelector('#resultsList');
@@ -22,31 +20,33 @@ function Product(productName) {
   this.views = 0;
   this.votes = 0;
 }
+Product.productObjects = [];
+Product.randomizedProductObjects = [];
 
 // create product objects
-function createProductObjects() {
+function initProductObjects() {
   for (let i = 0; i < productNames.length; i++) {
     const currentProduct = new Product(productNames[i]);
-    productObjects.push(currentProduct);
+    Product.productObjects.push(currentProduct);
   }
 }
 
 // fix "sweep" product imgSrc file extension
 function fixSweep() {
-  for (let i = 0; i < productObjects.length; i++) {
-    const currentProduct = productObjects[i];
+  for (let i = 0; i < Product.productObjects.length; i++) {
+    const currentProduct = Product.productObjects[i];
     if (currentProduct.productName === 'sweep') {
       currentProduct.imgSrc = 'img/sweep.png';
     }
   }
 }
 
-// randomize order of the productObjects array with the Fisher-Yates shuffle algorithm
+// randomize order of the productObjects array with the Fisher-Yates shuffle algorithm via ChatGPT
 function shuffleProductObjects() {
-  randomizedProductObjects = productObjects.slice();
-  for (let i = randomizedProductObjects.length - 1; i > 0; i--) {
+  Product.randomizedProductObjects = Product.productObjects.slice();
+  for (let i = Product.randomizedProductObjects.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [randomizedProductObjects[i], randomizedProductObjects[j]] = [randomizedProductObjects[j], randomizedProductObjects[i]];
+    [Product.randomizedProductObjects[i], Product.randomizedProductObjects[j]] = [Product.randomizedProductObjects[j], Product.randomizedProductObjects[i]];
   }
 }
 
@@ -56,29 +56,29 @@ function renderProductCandidates() {
     endVotingSession();
   }
 
-  if (randomizedProductObjects.length === 0) {
+  if (Product.randomizedProductObjects.length === 0) {
     shuffleProductObjects();
   }
 
-  firstCandidateInstance = randomizedProductObjects.pop();
+  firstCandidateInstance = Product.randomizedProductObjects.pop();
   firstCandidateImage.setAttribute('src', firstCandidateInstance.imgSrc);
   firstCandidateImage.setAttribute('alt', firstCandidateInstance.productName);
   firstCandidateInstance.views++;
 
-  if (randomizedProductObjects.length === 0) {
+  if (Product.randomizedProductObjects.length === 0) {
     shuffleProductObjects();
   }
 
-  secondCandidateInstance = randomizedProductObjects.pop();
+  secondCandidateInstance = Product.randomizedProductObjects.pop();
   secondCandidateImage.setAttribute('src', secondCandidateInstance.imgSrc);
   secondCandidateImage.setAttribute('alt', secondCandidateInstance.productName);
   secondCandidateInstance.views++;
 
-  if (randomizedProductObjects.length === 0) {
+  if (Product.randomizedProductObjects.length === 0) {
     shuffleProductObjects();
   }
 
-  thirdCandidateInstance = randomizedProductObjects.pop();
+  thirdCandidateInstance = Product.randomizedProductObjects.pop();
   thirdCandidateImage.setAttribute('src', thirdCandidateInstance.imgSrc);
   thirdCandidateImage.setAttribute('alt', thirdCandidateInstance.productName);
   thirdCandidateInstance.views++;
@@ -95,13 +95,20 @@ function endVotingSession() {
 
 // render results from voting session
 function renderResults() {
-  for (let i = 0; i < productObjects.length; i++) {
-    const currentProduct = productObjects[i];
+  for (let i = 0; i < Product.productObjects.length; i++) {
+    const currentProduct = Product.productObjects[i];
     const result = `${currentProduct.productName} got ${currentProduct.votes} votes and was shown as an option ${currentProduct.views} times.`;
     const resultListItem = document.createElement('li');
     resultsList.appendChild(resultListItem);
     resultListItem.textContent = result;
   }
+}
+
+// add event listeners for votes (clicks) on displayed products
+function initVoteEventListeners() {
+  firstCandidateImage.addEventListener('click', firstCandidateVote);
+  secondCandidateImage.addEventListener('click', secondCandidateVote);
+  thirdCandidateImage.addEventListener('click', thirdCandidateVote);
 }
 
 // functions to handle votes for product candidates
@@ -123,13 +130,13 @@ function thirdCandidateVote() {
   renderProductCandidates();
 }
 
-// run application
-createProductObjects();
-fixSweep();
-shuffleProductObjects();
-renderProductCandidates();
+// calls all functions to start the app
+function startApp() {
+  initProductObjects();
+  fixSweep();
+  renderProductCandidates();
+  initVoteEventListeners();
+}
 
-// event listeners for clicks (votes)
-firstCandidateImage.addEventListener('click', firstCandidateVote);
-secondCandidateImage.addEventListener('click', secondCandidateVote);
-thirdCandidateImage.addEventListener('click', thirdCandidateVote);
+// run application
+startApp();
