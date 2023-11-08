@@ -26,13 +26,30 @@ function Product(productName, imgSrc, views = 0, votes = 0) {
 Product.allProducts = [];
 Product.randomizedProducts = [];
 
-// create product objects
+// check if a local copy of products exists, if not then create product objects
 function initProductObjects() {
-  for (let product of productNames) {
-    const currentProduct = new Product(product, `img/${product}.jpg`);
+  const storedProducts = localStorage.getItem(productLocalStorageKey);
+
+  if (storedProducts) {
+    loadProducts(storedProducts);
+  } else {
+    for (let product of productNames) {
+      const currentProduct = new Product(product, `img/${product}.jpg`);
+      Product.allProducts.push(currentProduct);
+    }
+    fixSweep();
+  }
+}
+
+// load products and voting data from local storage
+function loadProducts(storedProducts) {
+  Product.allProducts.length = 0;
+
+  const storedProductObjects = JSON.parse(storedProducts);
+  for (let product of storedProductObjects) {
+    const currentProduct = new Product(product.productName, product.imgSrc, product.views, product.votes);
     Product.allProducts.push(currentProduct);
   }
-  fixSweep();
 }
 
 // fix "sweep" product imgSrc file extension
@@ -88,6 +105,32 @@ function renderProductCandidates() {
   thirdCandidateInstance.views++;
 }
 
+// add event listeners for votes (clicks) on displayed products
+function initVoteEventListeners() {
+  firstCandidateImage.addEventListener('click', firstCandidateVote);
+  secondCandidateImage.addEventListener('click', secondCandidateVote);
+  thirdCandidateImage.addEventListener('click', thirdCandidateVote);
+}
+
+// functions to handle votes for product candidates
+function firstCandidateVote() {
+  firstCandidateInstance.votes++;
+  roundCounter++;
+  renderProductCandidates();
+}
+
+function secondCandidateVote() {
+  secondCandidateInstance.votes++;
+  roundCounter++;
+  renderProductCandidates();
+}
+
+function thirdCandidateVote() {
+  thirdCandidateInstance.votes++;
+  roundCounter++;
+  renderProductCandidates();
+}
+
 // end voting sessions
 function endVotingSession() {
   firstCandidateImage.removeEventListener('click', firstCandidateVote);
@@ -97,23 +140,12 @@ function endVotingSession() {
   viewResultsButton.addEventListener('click', renderResults);
   viewResultsButton.removeAttribute('disabled');
 
-  saveProductVoteData();
+  saveProducts();
 }
 
-// save product voting data to local storage
-function saveProductVoteData() {
+// save product and voting data to local storage
+function saveProducts() {
   localStorage.setItem(productLocalStorageKey, JSON.stringify(Product.allProducts));
-}
-
-// start a new voting session
-function newVotingSession() {
-  newSessionButton.removeEventListener('click', newVotingSession);
-  newSessionButton.setAttribute('disabled', true);
-
-  roundCounter = 0;
-  resultsList.innerHTML = '';
-  resultsChart.destroy();
-  initVoteEventListeners();
 }
 
 // render results from voting session
@@ -187,31 +219,19 @@ function renderResultsChart() {
   resultsChart = new Chart(canvas, config); //eslint-disable-line
 }
 
-// add event listeners for votes (clicks) on displayed products
-function initVoteEventListeners() {
-  firstCandidateImage.addEventListener('click', firstCandidateVote);
-  secondCandidateImage.addEventListener('click', secondCandidateVote);
-  thirdCandidateImage.addEventListener('click', thirdCandidateVote);
+// start a new voting session
+function newVotingSession() {
+  newSessionButton.removeEventListener('click', newVotingSession);
+  newSessionButton.setAttribute('disabled', true);
+
+  roundCounter = 0;
+  resultsList.innerHTML = '';
+  resultsChart.destroy();
+  initVoteEventListeners();
 }
 
-// functions to handle votes for product candidates
-function firstCandidateVote() {
-  firstCandidateInstance.votes++;
-  roundCounter++;
-  renderProductCandidates();
-}
 
-function secondCandidateVote() {
-  secondCandidateInstance.votes++;
-  roundCounter++;
-  renderProductCandidates();
-}
 
-function thirdCandidateVote() {
-  thirdCandidateInstance.votes++;
-  roundCounter++;
-  renderProductCandidates();
-}
 
 // calls all functions to start the app
 function startApp() {
