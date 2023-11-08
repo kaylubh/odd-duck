@@ -114,8 +114,6 @@ function renderResultsChart() {
     productViews.push(Product.allProducts[i].views);
     productVotes.push(Product.allProducts[i].votes);
   }
-  console.log(productViews);
-  console.log(productVotes);
 
   // chart settings
   const data = {
@@ -125,11 +123,15 @@ function renderResultsChart() {
         label: 'Views',
         data: productViews,
         borderWidth: 1,
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgb(54, 162, 235)'
       },
       {
         label: 'Votes',
         data: productVotes,
-        borderWidth: 1
+        borderWidth: 1,
+        backgroundColor: 'rgba(255, 159, 64, 0.2)',
+        borderColor: 'rgb(255, 159, 64)'
       }
     ]
   };
@@ -138,9 +140,15 @@ function renderResultsChart() {
     type: 'bar',
     data: data,
     options: {
+      responsive: true,
       scales: {
         y: {
-          beginAtZero: true
+          beginAtZero: true,
+          min: 0,
+          suggestedMax: 5,
+          ticks: {
+            stepSize: 1
+          }
         }
       }
     },
