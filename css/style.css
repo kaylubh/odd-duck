@@ -79,9 +79,17 @@ aside li {
   width: 30%;
   height: 100%;
   border: 5px solid darkgray;
+  border-radius: 5%;
+  box-shadow: 5px 5px 5px 5px rgb(50, 50, 50);
   background-color: whitesmoke;
   object-fit: contain;
   display: block;
+  transition: all .5s ease;
+}
+
+#productImages img:hover {
+  border: 5px solid black;
+  box-shadow: 8px 8px 8px 8px rgb(50, 50, 50);
 }
 
 /* buttons area */
