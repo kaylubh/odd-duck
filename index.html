@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Patua+One">
   <title>New Product Vote - Odd Duck Product Co</title>
 </head>
 
@@ -24,11 +25,18 @@
         <img>
         <img>
       </section>
-      <button id="viewResults" disabled>View Results</button>
-      <section id="content"></section>
+      <section id="buttons">
+        <button id="viewResults" disabled>View Results</button>
+        <button id="newSession" disabled>New Voting Session</button>
+      </section>
+      
+      <section id="chartArea">
+        <canvas id="resultsChart"></canvas>
+      </section>
     </div>
   </main>
   <footer>&copy; 2023 - Odd Duck Product Co</footer>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
   <script src="js/app.js"></script>
 </body>
 

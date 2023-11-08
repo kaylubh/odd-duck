@@ -8,7 +8,9 @@ const firstCandidateImage = document.querySelector('#productImages img:first-chi
 const secondCandidateImage = document.querySelector('#productImages img:nth-child(2)');
 const thirdCandidateImage = document.querySelector('#productImages img:last-child');
 const viewResultsButton = document.querySelector('#viewResults');
+const newSessionButton = document.querySelector('#newSession');
 const resultsList = document.querySelector('#resultsList');
+let resultsChart;
 let roundCounter = 0;
 const maxRounds = 25;
 
@@ -20,21 +22,21 @@ function Product(productName) {
   this.views = 0;
   this.votes = 0;
 }
-Product.productObjects = [];
-Product.randomizedProductObjects = [];
+Product.allProducts = [];
+Product.randomizedProducts = [];
 
 // create product objects
 function initProductObjects() {
   for (let i = 0; i < productNames.length; i++) {
     const currentProduct = new Product(productNames[i]);
-    Product.productObjects.push(currentProduct);
+    Product.allProducts.push(currentProduct);
   }
 }
 
 // fix "sweep" product imgSrc file extension
 function fixSweep() {
-  for (let i = 0; i < Product.productObjects.length; i++) {
-    const currentProduct = Product.productObjects[i];
+  for (let i = 0; i < Product.allProducts.length; i++) {
+    const currentProduct = Product.allProducts[i];
     if (currentProduct.productName === 'sweep') {
       currentProduct.imgSrc = 'img/sweep.png';
     }
@@ -43,10 +45,10 @@ function fixSweep() {
 
 // randomize order of the productObjects array with the Fisher-Yates shuffle algorithm via ChatGPT
 function shuffleProductObjects() {
-  Product.randomizedProductObjects = Product.productObjects.slice();
-  for (let i = Product.randomizedProductObjects.length - 1; i > 0; i--) {
+  Product.randomizedProducts = Product.allProducts.slice();
+  for (let i = Product.randomizedProducts.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [Product.randomizedProductObjects[i], Product.randomizedProductObjects[j]] = [Product.randomizedProductObjects[j], Product.randomizedProductObjects[i]];
+    [Product.randomizedProducts[i], Product.randomizedProducts[j]] = [Product.randomizedProducts[j], Product.randomizedProducts[i]];
   }
 }
 
@@ -56,29 +58,29 @@ function renderProductCandidates() {
     endVotingSession();
   }
 
-  if (Product.randomizedProductObjects.length === 0) {
+  if (Product.randomizedProducts.length === 0) {
     shuffleProductObjects();
   }
 
-  firstCandidateInstance = Product.randomizedProductObjects.pop();
+  firstCandidateInstance = Product.randomizedProducts.pop();
   firstCandidateImage.setAttribute('src', firstCandidateInstance.imgSrc);
   firstCandidateImage.setAttribute('alt', firstCandidateInstance.productName);
   firstCandidateInstance.views++;
 
-  if (Product.randomizedProductObjects.length === 0) {
+  if (Product.randomizedProducts.length === 0) {
     shuffleProductObjects();
   }
 
-  secondCandidateInstance = Product.randomizedProductObjects.pop();
+  secondCandidateInstance = Product.randomizedProducts.pop();
   secondCandidateImage.setAttribute('src', secondCandidateInstance.imgSrc);
   secondCandidateImage.setAttribute('alt', secondCandidateInstance.productName);
   secondCandidateInstance.views++;
 
-  if (Product.randomizedProductObjects.length === 0) {
+  if (Product.randomizedProducts.length === 0) {
     shuffleProductObjects();
   }
 
-  thirdCandidateInstance = Product.randomizedProductObjects.pop();
+  thirdCandidateInstance = Product.randomizedProducts.pop();
   thirdCandidateImage.setAttribute('src', thirdCandidateInstance.imgSrc);
   thirdCandidateImage.setAttribute('alt', thirdCandidateInstance.productName);
   thirdCandidateInstance.views++;
@@ -93,15 +95,86 @@ function endVotingSession() {
   viewResultsButton.removeAttribute('disabled');
 }
 
+// start a new voting session
+function newVotingSession() {
+  newSessionButton.removeEventListener('click', newVotingSession);
+  newSessionButton.setAttribute('disabled', true);
+
+  roundCounter = 0;
+  resultsList.innerHTML = '';
+  resultsChart.destroy();
+  initVoteEventListeners();
+}
+
 // render results from voting session
 function renderResults() {
-  for (let i = 0; i < Product.productObjects.length; i++) {
-    const currentProduct = Product.productObjects[i];
+  for (let i = 0; i < Product.allProducts.length; i++) {
+    const currentProduct = Product.allProducts[i];
     const result = `${currentProduct.productName} got ${currentProduct.votes} votes and was shown as an option ${currentProduct.views} times.`;
     const resultListItem = document.createElement('li');
     resultsList.appendChild(resultListItem);
     resultListItem.textContent = result;
   }
+
+  viewResultsButton.removeEventListener('click', renderResults);
+  viewResultsButton.setAttribute('disabled', true);
+  newSessionButton.addEventListener('click', newVotingSession);
+  newSessionButton.removeAttribute('disabled');
+  renderResultsChart();
+}
+
+// display results in a bar chart
+function renderResultsChart() {
+  const productViews = [];
+  const productVotes = [];
+
+  for (let i = 0; i < Product.allProducts.length; i++) {
+    productViews.push(Product.allProducts[i].views);
+    productVotes.push(Product.allProducts[i].votes);
+  }
+
+  // chart settings
+  const data = {
+    labels: productNames,
+    datasets: [
+      {
+        label: 'Views',
+        data: productViews,
+        borderWidth: 1,
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        borderColor: 'rgb(54, 162, 235)'
+      },
+      {
+        label: 'Votes',
+        data: productVotes,
+        borderWidth: 1,
+        backgroundColor: 'rgba(255, 159, 64, 0.2)',
+        borderColor: 'rgb(255, 159, 64)'
+      }
+    ]
+  };
+
+  const config = {
+    type: 'bar',
+    data: data,
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true,
+          min: 0,
+          suggestedMax: 5,
+          ticks: {
+            stepSize: 1
+          }
+        }
+      }
+    },
+  };
+
+  // render chart
+  const canvas = document.querySelector('#resultsChart');
+  resultsChart = new Chart(canvas, config); //eslint-disable-line
 }
 
 // add event listeners for votes (clicks) on displayed products
