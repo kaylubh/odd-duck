@@ -16,21 +16,22 @@ const maxRounds = 25;
 
 
 // product constructor function
-function Product(productName) {
+function Product(productName, imgSrc, views = 0, votes = 0) {
   this.productName = productName;
-  this.imgSrc = `img/${productName}.jpg`;
-  this.views = 0;
-  this.votes = 0;
+  this.imgSrc = imgSrc;
+  this.views = views;
+  this.votes = votes;
 }
 Product.allProducts = [];
 Product.randomizedProducts = [];
 
 // create product objects
 function initProductObjects() {
-  for (let i = 0; i < productNames.length; i++) {
-    const currentProduct = new Product(productNames[i]);
+  for (let product of productNames) {
+    const currentProduct = new Product(product, `img/${product}.jpg`);
     Product.allProducts.push(currentProduct);
   }
+  fixSweep();
 }
 
 // fix "sweep" product imgSrc file extension
@@ -206,7 +207,6 @@ function thirdCandidateVote() {
 // calls all functions to start the app
 function startApp() {
   initProductObjects();
-  fixSweep();
   renderProductCandidates();
   initVoteEventListeners();
 }
