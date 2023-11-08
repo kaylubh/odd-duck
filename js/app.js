@@ -8,7 +8,9 @@ const firstCandidateImage = document.querySelector('#productImages img:first-chi
 const secondCandidateImage = document.querySelector('#productImages img:nth-child(2)');
 const thirdCandidateImage = document.querySelector('#productImages img:last-child');
 const viewResultsButton = document.querySelector('#viewResults');
+const newSessionButton = document.querySelector('#newSession');
 const resultsList = document.querySelector('#resultsList');
+let resultsChart;
 let roundCounter = 0;
 const maxRounds = 25;
 
@@ -93,6 +95,17 @@ function endVotingSession() {
   viewResultsButton.removeAttribute('disabled');
 }
 
+// start a new voting session
+function newVotingSession() {
+  newSessionButton.removeEventListener('click', newVotingSession);
+  newSessionButton.setAttribute('disabled', true);
+
+  roundCounter = 0;
+  resultsList.innerHTML = '';
+  resultsChart.destroy();
+  initVoteEventListeners();
+}
+
 // render results from voting session
 function renderResults() {
   for (let i = 0; i < Product.allProducts.length; i++) {
@@ -102,6 +115,11 @@ function renderResults() {
     resultsList.appendChild(resultListItem);
     resultListItem.textContent = result;
   }
+
+  viewResultsButton.removeEventListener('click', renderResults);
+  viewResultsButton.setAttribute('disabled', true);
+  newSessionButton.addEventListener('click', newVotingSession);
+  newSessionButton.removeAttribute('disabled');
   renderResultsChart();
 }
 
@@ -156,7 +174,7 @@ function renderResultsChart() {
 
   // render chart
   const canvas = document.querySelector('#resultsChart');
-  const resultsChart = new Chart(canvas, config);
+  resultsChart = new Chart(canvas, config); //eslint-disable-line
 }
 
 // add event listeners for votes (clicks) on displayed products
