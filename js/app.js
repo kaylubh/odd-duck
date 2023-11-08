@@ -13,6 +13,7 @@ const resultsList = document.querySelector('#resultsList');
 let resultsChart;
 let roundCounter = 0;
 const maxRounds = 25;
+const productLocalStorageKey = 'product-key';
 
 
 // product constructor function
@@ -92,8 +93,16 @@ function endVotingSession() {
   firstCandidateImage.removeEventListener('click', firstCandidateVote);
   secondCandidateImage.removeEventListener('click', secondCandidateVote);
   thirdCandidateImage.removeEventListener('click', thirdCandidateVote);
+
   viewResultsButton.addEventListener('click', renderResults);
   viewResultsButton.removeAttribute('disabled');
+
+  saveProductVoteData();
+}
+
+// save product voting data to local storage
+function saveProductVoteData() {
+  localStorage.setItem(productLocalStorageKey, JSON.stringify(Product.allProducts));
 }
 
 // start a new voting session
