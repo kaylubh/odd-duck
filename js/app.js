@@ -75,6 +75,7 @@ function shuffleProductObjects() {
 function renderProductCandidates() {
   if (roundCounter === maxRounds) {
     endVotingSession();
+    return;
   }
 
   if (Product.randomizedProducts.length === 0) {
