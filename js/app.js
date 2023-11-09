@@ -228,6 +228,7 @@ function newVotingSession() {
   resultsList.innerHTML = '';
   resultsChart.destroy();
   initVoteEventListeners();
+  initProductObjects();
 }
 
 
